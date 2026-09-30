@@ -28,7 +28,12 @@ namespace PaperDollsGame.Content
         public bool TryGetItem(string id, out ItemDefinition definition)
         {
             EnsureLookups();
-            return !string.IsNullOrEmpty(id) && itemsById.TryGetValue(id, out definition);
+            if (string.IsNullOrEmpty(id))
+            {
+                definition = null;
+                return false;
+            }
+            return itemsById.TryGetValue(id, out definition);
         }
 
         public EventDefinition GetEvent(string id)

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using PaperDollsGame.Content;
+using PaperDollsGame.Outfit;
 using UnityEngine;
 
 namespace PaperDollsGame.Saving
@@ -73,27 +74,35 @@ namespace PaperDollsGame.Saving
 
             string temporaryPath = savePath + ".tmp";
             string backupPath = savePath + ".bak";
-            File.WriteAllText(temporaryPath, JsonUtility.ToJson(data, true));
-            if (File.Exists(savePath))
+            try
             {
-                if (File.Exists(backupPath))
-                    File.Delete(backupPath);
-                File.Move(savePath, backupPath);
-                try
+                File.WriteAllText(temporaryPath, JsonUtility.ToJson(data, true));
+                if (File.Exists(savePath))
+                {
+                    if (File.Exists(backupPath))
+                        File.Delete(backupPath);
+                    File.Move(savePath, backupPath);
+                    try
+                    {
+                        File.Move(temporaryPath, savePath);
+                        File.Delete(backupPath);
+                    }
+                    catch
+                    {
+                        if (!File.Exists(savePath) && File.Exists(backupPath))
+                            File.Move(backupPath, savePath);
+                        throw;
+                    }
+                }
+                else
                 {
                     File.Move(temporaryPath, savePath);
-                    File.Delete(backupPath);
-                }
-                catch
-                {
-                    if (!File.Exists(savePath) && File.Exists(backupPath))
-                        File.Move(backupPath, savePath);
-                    throw;
                 }
             }
-            else
+            finally
             {
-                File.Move(temporaryPath, savePath);
+                if (File.Exists(temporaryPath))
+                    File.Delete(temporaryPath);
             }
         }
 
@@ -102,6 +111,12 @@ namespace PaperDollsGame.Saving
             string backupPath = savePath + ".bak";
             if (!File.Exists(savePath) && File.Exists(backupPath))
                 File.Move(backupPath, savePath);
+            else if (File.Exists(savePath) && File.Exists(backupPath))
+                File.Delete(backupPath);
+
+            string temporaryPath = savePath + ".tmp";
+            if (File.Exists(temporaryPath))
+                File.Delete(temporaryPath);
         }
 
         private static void Normalize(PlayerSaveData data)
@@ -109,7 +124,7 @@ namespace PaperDollsGame.Saving
             if (data.ownedItemIds == null)
                 data.ownedItemIds = new List<string>();
             if (data.equippedItems == null)
-                data.equippedItems = new List<EquippedItemData>();
+                data.equippedItems = new List<OutfitItemData>();
             if (data.currencies == null)
                 data.currencies = new List<CurrencyBalance>();
         }

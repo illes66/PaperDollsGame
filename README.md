@@ -21,7 +21,7 @@ The initial code foundation is under `Assets/_Project/`. It provides local conte
 4. Add `GameBootstrap` to a scene GameObject, assign the catalog, and configure starter item IDs and initial currency.
 5. Build UI views that call `GameBootstrap.Flow` and render item definitions and the score result. Assign visuals through the item icon/prefab references as needed.
 
-On the first launch, starter ownership and starting currency are written to the save. Subsequent launches load the existing save; changing starter settings does not overwrite existing player data. Outfit changes and event rewards are saved locally. Unsupported/corrupt save data raises an error instead of silently resetting progress.
+On the first launch, starter ownership and starting currency are written to the save. Subsequent launches load the existing save; changing starter settings does not overwrite existing player data. Outfit changes, item acquisitions, and currency transactions are saved locally. Unsupported/corrupt save data raises an error instead of silently resetting progress.
 
 ### Scope and next steps
 

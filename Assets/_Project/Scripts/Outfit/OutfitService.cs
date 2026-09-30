@@ -33,8 +33,8 @@ namespace PaperDollsGame.Outfit
                 OutfitSelection copy = new OutfitSelection();
                 for (int i = 0; i < selection.items.Count; i++)
                 {
-                    SelectedOutfitItem item = selection.items[i];
-                    copy.items.Add(new SelectedOutfitItem { slot = item.slot, itemId = item.itemId });
+                    OutfitItemData item = selection.items[i];
+                    copy.items.Add(new OutfitItemData { slot = item.slot, itemId = item.itemId });
                 }
                 return copy;
             }
@@ -51,7 +51,7 @@ namespace PaperDollsGame.Outfit
                 if (selection.items[i].slot == definition.Slot)
                     selection.items.RemoveAt(i);
             }
-            selection.items.Add(new SelectedOutfitItem { slot = definition.Slot, itemId = itemId });
+            selection.items.Add(new OutfitItemData { slot = definition.Slot, itemId = itemId });
             SaveOutfit();
         }
 
@@ -65,14 +65,14 @@ namespace PaperDollsGame.Outfit
         {
             for (int i = 0; i < saveData.equippedItems.Count; i++)
             {
-                EquippedItemData saved = saveData.equippedItems[i];
+                OutfitItemData saved = saveData.equippedItems[i];
                 ItemDefinition definition;
                 if (saved != null
                     && inventory.CanEquip(saved.itemId)
                     && catalog.TryGetItem(saved.itemId, out definition)
                     && definition.Slot == saved.slot)
                 {
-                    selection.items.Add(new SelectedOutfitItem { slot = saved.slot, itemId = saved.itemId });
+                    selection.items.Add(new OutfitItemData { slot = saved.slot, itemId = saved.itemId });
                 }
             }
         }
@@ -82,8 +82,8 @@ namespace PaperDollsGame.Outfit
             saveData.equippedItems.Clear();
             for (int i = 0; i < selection.items.Count; i++)
             {
-                SelectedOutfitItem item = selection.items[i];
-                saveData.equippedItems.Add(new EquippedItemData { slot = item.slot, itemId = item.itemId });
+                OutfitItemData item = selection.items[i];
+                saveData.equippedItems.Add(new OutfitItemData { slot = item.slot, itemId = item.itemId });
             }
             saveService.Save(saveData);
         }

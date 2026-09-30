@@ -1,16 +1,10 @@
 using System;
 using System.Collections.Generic;
 using PaperDollsGame.Content;
+using PaperDollsGame.Outfit;
 
 namespace PaperDollsGame.Saving
 {
-    [Serializable]
-    public sealed class EquippedItemData
-    {
-        public ItemSlot slot;
-        public string itemId;
-    }
-
     [Serializable]
     public sealed class CurrencyBalance
     {
@@ -23,7 +17,7 @@ namespace PaperDollsGame.Saving
     {
         public int schemaVersion = SaveService.CurrentSchemaVersion;
         public List<string> ownedItemIds = new List<string>();
-        public List<EquippedItemData> equippedItems = new List<EquippedItemData>();
+        public List<OutfitItemData> equippedItems = new List<OutfitItemData>();
         public List<CurrencyBalance> currencies = new List<CurrencyBalance>();
     }
 }

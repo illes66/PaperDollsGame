@@ -5,7 +5,7 @@ using PaperDollsGame.Content;
 namespace PaperDollsGame.Outfit
 {
     [Serializable]
-    public sealed class SelectedOutfitItem
+    public sealed class OutfitItemData
     {
         public ItemSlot slot;
         public string itemId;
@@ -14,6 +14,6 @@ namespace PaperDollsGame.Outfit
     [Serializable]
     public sealed class OutfitSelection
     {
-        public List<SelectedOutfitItem> items = new List<SelectedOutfitItem>();
+        public List<OutfitItemData> items = new List<OutfitItemData>();
     }
 }

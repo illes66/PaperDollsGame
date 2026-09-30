@@ -2,7 +2,6 @@ using System;
 using PaperDollsGame.Content;
 using PaperDollsGame.Economy;
 using PaperDollsGame.Outfit;
-using PaperDollsGame.Saving;
 using PaperDollsGame.Scoring;
 
 namespace PaperDollsGame.Flow
@@ -20,8 +19,6 @@ namespace PaperDollsGame.Flow
         private readonly OutfitService outfitService;
         private readonly ScoringService scoringService;
         private readonly EconomyService economyService;
-        private readonly SaveService saveService;
-        private readonly PlayerSaveData saveData;
         private EventDefinition currentEvent;
 
         public GamePhase Phase { get; private set; }
@@ -31,16 +28,12 @@ namespace PaperDollsGame.Flow
             ContentCatalog catalog,
             OutfitService outfitService,
             ScoringService scoringService,
-            EconomyService economyService,
-            SaveService saveService,
-            PlayerSaveData saveData)
+            EconomyService economyService)
         {
             this.catalog = catalog != null ? catalog : throw new ArgumentNullException("catalog");
             this.outfitService = outfitService ?? throw new ArgumentNullException("outfitService");
             this.scoringService = scoringService ?? throw new ArgumentNullException("scoringService");
             this.economyService = economyService ?? throw new ArgumentNullException("economyService");
-            this.saveService = saveService ?? throw new ArgumentNullException("saveService");
-            this.saveData = saveData ?? throw new ArgumentNullException("saveData");
             Phase = GamePhase.SelectEvent;
         }
 
@@ -68,7 +61,6 @@ namespace PaperDollsGame.Flow
             EnsureDressing();
             LastResult = scoringService.Calculate(currentEvent, outfitService.Current);
             economyService.Grant(currentEvent.RewardCurrencyId, currentEvent.RewardAmount);
-            saveService.Save(saveData);
             Phase = GamePhase.Results;
         }
 

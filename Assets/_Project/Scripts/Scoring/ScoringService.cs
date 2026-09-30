@@ -39,7 +39,7 @@ namespace PaperDollsGame.Scoring
             ScoreResult result = new ScoreResult();
             for (int itemIndex = 0; itemIndex < outfit.items.Count; itemIndex++)
             {
-                SelectedOutfitItem selected = outfit.items[itemIndex];
+                OutfitItemData selected = outfit.items[itemIndex];
                 ItemDefinition item = catalog.GetItem(selected.itemId);
                 if (item.Slot != selected.slot)
                     throw new InvalidOperationException("Outfit item slot does not match its definition.");

@@ -37,9 +37,9 @@ namespace PaperDollsGame.Bootstrap
 
             Inventory = new InventoryService(contentCatalog, saveService, saveData);
             Outfit = new OutfitService(contentCatalog, Inventory, saveService, saveData);
-            Economy = new EconomyService(saveData);
+            Economy = new EconomyService(saveData, saveService);
             ScoringService scoring = new ScoringService(contentCatalog);
-            Flow = new GameFlowController(contentCatalog, Outfit, scoring, Economy, saveService, saveData);
+            Flow = new GameFlowController(contentCatalog, Outfit, scoring, Economy);
         }
     }
 }

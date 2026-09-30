@@ -6,10 +6,12 @@ namespace PaperDollsGame.Economy
     public sealed class EconomyService
     {
         private readonly PlayerSaveData saveData;
+        private readonly SaveService saveService;
 
-        public EconomyService(PlayerSaveData saveData)
+        public EconomyService(PlayerSaveData saveData, SaveService saveService)
         {
             this.saveData = saveData ?? throw new ArgumentNullException("saveData");
+            this.saveService = saveService ?? throw new ArgumentNullException("saveService");
         }
 
         public int GetBalance(string currencyId)
@@ -32,6 +34,7 @@ namespace PaperDollsGame.Economy
                 saveData.currencies.Add(balance);
             }
             checked { balance.amount += amount; }
+            saveService.Save(saveData);
         }
 
         public bool TrySpend(string currencyId, int amount)
@@ -45,6 +48,7 @@ namespace PaperDollsGame.Economy
             if (balance == null || balance.amount < amount)
                 return false;
             balance.amount -= amount;
+            saveService.Save(saveData);
             return true;
         }
 
