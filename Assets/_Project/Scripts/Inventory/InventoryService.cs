@@ -7,11 +7,13 @@ namespace PaperDollsGame.Inventory
     public sealed class InventoryService
     {
         private readonly ContentCatalog catalog;
+        private readonly SaveService saveService;
         private readonly PlayerSaveData saveData;
 
-        public InventoryService(ContentCatalog catalog, PlayerSaveData saveData)
+        public InventoryService(ContentCatalog catalog, SaveService saveService, PlayerSaveData saveData)
         {
             this.catalog = catalog != null ? catalog : throw new ArgumentNullException("catalog");
+            this.saveService = saveService ?? throw new ArgumentNullException("saveService");
             this.saveData = saveData ?? throw new ArgumentNullException("saveData");
         }
 
@@ -30,7 +32,10 @@ namespace PaperDollsGame.Inventory
         {
             catalog.GetItem(itemId);
             if (!IsOwned(itemId))
+            {
                 saveData.ownedItemIds.Add(itemId);
+                saveService.Save(saveData);
+            }
         }
     }
 }

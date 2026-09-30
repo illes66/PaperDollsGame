@@ -47,11 +47,15 @@ namespace PaperDollsGame.Content
 
             itemsById = new Dictionary<string, ItemDefinition>(StringComparer.Ordinal);
             eventsById = new Dictionary<string, EventDefinition>(StringComparer.Ordinal);
-            AddDefinitions(items, itemsById, "item");
-            AddDefinitions(events, eventsById, "event");
+            AddDefinitions(items, itemsById, "item", definition => definition.Id);
+            AddDefinitions(events, eventsById, "event", definition => definition.Id);
         }
 
-        private static void AddDefinitions<T>(IList<T> definitions, IDictionary<string, T> lookup, string kind)
+        private static void AddDefinitions<T>(
+            IList<T> definitions,
+            IDictionary<string, T> lookup,
+            string kind,
+            Func<T, string> getId)
             where T : ScriptableObject
         {
             for (int i = 0; i < definitions.Count; i++)
@@ -60,9 +64,7 @@ namespace PaperDollsGame.Content
                 if (definition == null)
                     throw new InvalidOperationException("The content catalog contains a null " + kind + " definition.");
 
-                string id = definition is ItemDefinition
-                    ? ((ItemDefinition)(ScriptableObject)definition).Id
-                    : ((EventDefinition)(ScriptableObject)definition).Id;
+                string id = getId(definition);
                 if (string.IsNullOrWhiteSpace(id))
                     throw new InvalidOperationException("A " + kind + " definition has an empty ID.");
                 if (lookup.ContainsKey(id))

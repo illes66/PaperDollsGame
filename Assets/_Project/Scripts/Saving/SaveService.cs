@@ -24,6 +24,7 @@ namespace PaperDollsGame.Saving
             string startingCurrencyId,
             int startingCurrencyAmount)
         {
+            RecoverInterruptedSave();
             if (File.Exists(savePath))
             {
                 PlayerSaveData loaded = JsonUtility.FromJson<PlayerSaveData>(File.ReadAllText(savePath));
@@ -71,11 +72,36 @@ namespace PaperDollsGame.Saving
                 Directory.CreateDirectory(directory);
 
             string temporaryPath = savePath + ".tmp";
+            string backupPath = savePath + ".bak";
             File.WriteAllText(temporaryPath, JsonUtility.ToJson(data, true));
             if (File.Exists(savePath))
-                File.Replace(temporaryPath, savePath, null);
+            {
+                if (File.Exists(backupPath))
+                    File.Delete(backupPath);
+                File.Move(savePath, backupPath);
+                try
+                {
+                    File.Move(temporaryPath, savePath);
+                    File.Delete(backupPath);
+                }
+                catch
+                {
+                    if (!File.Exists(savePath) && File.Exists(backupPath))
+                        File.Move(backupPath, savePath);
+                    throw;
+                }
+            }
             else
+            {
                 File.Move(temporaryPath, savePath);
+            }
+        }
+
+        private void RecoverInterruptedSave()
+        {
+            string backupPath = savePath + ".bak";
+            if (!File.Exists(savePath) && File.Exists(backupPath))
+                File.Move(backupPath, savePath);
         }
 
         private static void Normalize(PlayerSaveData data)
