@@ -51,6 +51,18 @@ namespace PaperDollsGame.Flow
             Phase = GamePhase.Dressing;
         }
 
+        public void EquipItem(string itemId)
+        {
+            EnsureDressing();
+            outfitService.Equip(itemId);
+        }
+
+        public void RemoveItem(ItemSlot slot)
+        {
+            EnsureDressing();
+            outfitService.Remove(slot);
+        }
+
         public void SubmitOutfit()
         {
             EnsureDressing();

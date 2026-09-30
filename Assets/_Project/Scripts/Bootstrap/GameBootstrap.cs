@@ -36,7 +36,7 @@ namespace PaperDollsGame.Bootstrap
                 startingCurrencyAmount);
 
             Inventory = new InventoryService(contentCatalog, saveData);
-            Outfit = new OutfitService(contentCatalog, Inventory, saveData);
+            Outfit = new OutfitService(contentCatalog, Inventory, saveService, saveData);
             Economy = new EconomyService(saveData);
             ScoringService scoring = new ScoringService(contentCatalog);
             Flow = new GameFlowController(contentCatalog, Outfit, scoring, Economy, saveService, saveData);

@@ -9,13 +9,19 @@ namespace PaperDollsGame.Outfit
     {
         private readonly ContentCatalog catalog;
         private readonly InventoryService inventory;
+        private readonly SaveService saveService;
         private readonly PlayerSaveData saveData;
         private readonly OutfitSelection selection = new OutfitSelection();
 
-        public OutfitService(ContentCatalog catalog, InventoryService inventory, PlayerSaveData saveData)
+        public OutfitService(
+            ContentCatalog catalog,
+            InventoryService inventory,
+            SaveService saveService,
+            PlayerSaveData saveData)
         {
             this.catalog = catalog != null ? catalog : throw new ArgumentNullException("catalog");
             this.inventory = inventory ?? throw new ArgumentNullException("inventory");
+            this.saveService = saveService ?? throw new ArgumentNullException("saveService");
             this.saveData = saveData ?? throw new ArgumentNullException("saveData");
             RestoreSavedOutfit();
         }
@@ -46,13 +52,13 @@ namespace PaperDollsGame.Outfit
                     selection.items.RemoveAt(i);
             }
             selection.items.Add(new SelectedOutfitItem { slot = definition.Slot, itemId = itemId });
-            PersistOutfit();
+            SaveOutfit();
         }
 
         public void Remove(ItemSlot slot)
         {
             selection.items.RemoveAll(item => item.slot == slot);
-            PersistOutfit();
+            SaveOutfit();
         }
 
         private void RestoreSavedOutfit()
@@ -71,7 +77,7 @@ namespace PaperDollsGame.Outfit
             }
         }
 
-        private void PersistOutfit()
+        private void SaveOutfit()
         {
             saveData.equippedItems.Clear();
             for (int i = 0; i < selection.items.Count; i++)
@@ -79,6 +85,7 @@ namespace PaperDollsGame.Outfit
                 SelectedOutfitItem item = selection.items[i];
                 saveData.equippedItems.Add(new EquippedItemData { slot = item.slot, itemId = item.itemId });
             }
+            saveService.Save(saveData);
         }
     }
 }
